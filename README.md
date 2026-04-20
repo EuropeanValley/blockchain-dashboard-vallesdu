@@ -9,8 +9,8 @@ Update this README every week.
 
 | Field | Value |
 |---|---|
-| Student Name | |
-| GitHub Username | |
+| Student Name | Eduardo Vallejo |
+| GitHub Username | vallesdu |
 | Project Title | |
 | Chosen AI Approach | |
 
