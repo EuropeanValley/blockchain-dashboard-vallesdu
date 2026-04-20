@@ -11,8 +11,8 @@ Update this README every week.
 |---|---|
 | Student Name | Eduardo Vallejo |
 | GitHub Username | vallesdu |
-| Project Title | |
-| Chosen AI Approach | |
+| Project Title | Bitcoin Live Metrics & AI Insights |
+| Chosen AI Approach | Anomaly Detector on inter-block arrival times |
 
 ## Module Tracking
 
@@ -20,7 +20,7 @@ Use one of these values: `Not started`, `In progress`, `Done`
 
 | Module | What it should include | Status |
 |---|---|---|
-| M1 | Proof of Work Monitor | Not started |
+| M1 | Proof of Work Monitor | In progress |
 | M2 | Block Header Analyzer | Not started |
 | M3 | Difficulty History | Not started |
 | M4 | AI Component | Not started |
@@ -37,7 +37,7 @@ Write 3 to 5 short lines about what you have already done.
 
 Write the next small step you will do before the next class.
 
-- 
+- Build Streamlit dashboard showing live difficulty, inter-block time histogram and estimated hash rate."
 
 ## Main Problem or Blocker
 
