@@ -22,28 +22,34 @@ Use one of these values: `Not started`, `In progress`, `Done`
 |---|---|---|
 | M1 | Proof of Work Monitor | Done|
 | M2 | Block Header Analyzer | Done |
-| M3 | Difficulty History | Not started |
-| M4 | AI Component | Not started |
+| M3 | Difficulty History | Done |
+| M4 | AI Component | Done |
 
 ## Current Progress
 
 Write 3 to 5 short lines about what you have already done.
 
-- 
-- 
-- 
+- Implemented M1: live difficulty, estimated hash rate, hash vs target visualization, and inter-block time histogram.
+
+- Implemented M2: full 80-byte header breakdown, bits→target conversion, and local Proof of Work verification using hashlib.
+
+- Implemented M3: difficulty history chart over last adjustment periods, block time ratio per period, and summary table.
+
+- Implemented M4: anomaly detector on inter-block arrival times using Z-score and exponential CDF p-value, with model evaluation metrics.
+
+- Added API fallback to mempool.space and request caching to handle rate limits from blockstream.info.
 
 ## Next Step
 
 Write the next small step you will do before the next class.
 
-- Build Streamlit dashboard showing live difficulty, inter-block time histogram and estimated hash rate."
+- Polish the dashboard visuals and test all four modules end to end
 
 ## Main Problem or Blocker
 
 Write here if you are stuck with something.
 
-- 
+- Blockstream API rate limits (429 errors) when too many requests are made in a short time. Solved with caching and mempool.space fallback.
 
 ## How to Run
 
