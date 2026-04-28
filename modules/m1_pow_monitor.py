@@ -12,55 +12,51 @@ import datetime
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh
 
 from api.blockchain_client import get_latest_block, get_recent_blocks
 
 
+@st.cache_data(ttl=60)
+def fetch_latest_block():
+    return get_latest_block()
+
+
+@st.cache_data(ttl=60)
+def fetch_recent_blocks():
+    return get_recent_blocks(n=15)
+
+
 def bits_to_target(bits: int) -> int:
-    """
-    Convierte el campo 'bits' del header al valor target de 256 bits.
-    Formato compacto: primer byte = exponente, siguientes 3 = coeficiente.
-    target = coeficiente * 2^(8*(exponente-3))
-    """
     exponent = bits >> 24
     coefficient = bits & 0x00FFFFFF
-    target = coefficient * (2 ** (8 * (exponent - 3)))
-    return target
+    return coefficient * (2 ** (8 * (exponent - 3)))
 
 
 def count_leading_zero_bits(block_hash: str) -> int:
-    """Cuenta los bits cero a la izquierda del hash del bloque."""
     n = int(block_hash, 16)
     return 256 - n.bit_length()
 
 
 def estimate_hashrate(difficulty: float) -> float:
-    """
-    Estima el hash rate de la red a partir de la dificultad.
-    Formula: hashrate = difficulty * 2^32 / 600
-    (600s = tiempo objetivo entre bloques)
-    """
     return difficulty * (2 ** 32) / 600
 
 
 def render() -> None:
-    """Render del panel M1."""
     st.header("⛏️ M1 — Proof of Work Monitor")
     st.caption("Live data from the Bitcoin network · Source: blockstream.info")
 
-    # Auto-refresh: dispara un rerun cada 60 segundos sin bloquear la UI
-    st_autorefresh(interval=60_000, key="m1_autorefresh")
+    if st.button("🔄 Refresh data", key="m1_refresh"):
+        fetch_latest_block.clear()
+        fetch_recent_blocks.clear()
 
     with st.spinner("Fetching blockchain data..."):
         try:
-            latest = get_latest_block()
-            recent_blocks = get_recent_blocks(n=15)
+            latest = fetch_latest_block()
+            recent_blocks = fetch_recent_blocks()
         except Exception as exc:
-            st.error(f"❌ Error connecting to API: {exc}")
+            st.error(f"Error connecting to API: {exc}")
             return
 
-    # ── MÉTRICAS PRINCIPALES ─────────────────────────────────────────────────
     difficulty = latest.get("difficulty", 0)
     bits = latest.get("bits", 0)
     block_hash = latest.get("id", "")
@@ -69,7 +65,7 @@ def render() -> None:
     target = bits_to_target(bits)
     leading_zeros = count_leading_zero_bits(block_hash)
     hashrate = estimate_hashrate(difficulty)
-    hashrate_eh = hashrate / 1e18  # Convertir a EH/s (exahashes por segundo)
+    hashrate_eh = hashrate / 1e18
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("📦 Block Height", f"{height:,}")
@@ -77,7 +73,6 @@ def render() -> None:
     col3.metric("⚡ Estimated Hash Rate", f"{hashrate_eh:.1f} EH/s")
     col4.metric("🔢 Leading Zero Bits", f"{leading_zeros}")
 
-    # ── HASH AND TARGET ──────────────────────────────────────────────────────
     st.divider()
     st.subheader("🔍 Current Hash vs Target (256-bit SHA-256 space)")
 
@@ -109,10 +104,7 @@ def render() -> None:
     if len(recent_blocks) >= 2:
         timestamps = [b["timestamp"] for b in recent_blocks]
         timestamps.sort()
-        inter_times = [
-            (timestamps[i + 1] - timestamps[i]) / 60
-            for i in range(len(timestamps) - 1)
-        ]
+        inter_times = [(timestamps[i+1] - timestamps[i]) / 60 for i in range(len(timestamps)-1)]
 
         df_times = pd.DataFrame({"Minutes between blocks": inter_times})
 
@@ -121,33 +113,21 @@ def render() -> None:
             x="Minutes between blocks",
             nbins=15,
             title="Distribution of inter-block times (last blocks)",
-            labels={"Minutes between blocks": "Time (minutes)", "count": "Frequency"},
             color_discrete_sequence=["#f7931a"],
         )
-        fig_hist.add_vline(
-            x=10,
-            line_dash="dash",
-            line_color="red",
-            annotation_text="Target: 10 min",
-            annotation_position="top right",
-        )
-        fig_hist.update_layout(
-            xaxis_title="Time between blocks (minutes)",
-            yaxis_title="Number of blocks",
-            showlegend=False,
-        )
+        fig_hist.add_vline(x=10, line_dash="dash", line_color="red",
+                           annotation_text="Target: 10 min", annotation_position="top right")
+        fig_hist.update_layout(xaxis_title="Time between blocks (minutes)", yaxis_title="Number of blocks")
         st.plotly_chart(fig_hist, use_container_width=True)
 
         avg_time = sum(inter_times) / len(inter_times)
         st.caption(
             f"Average of last {len(inter_times)} intervals: **{avg_time:.1f} min** "
-            f"(target: 10 min). An exponential distribution is expected because each hash "
-            f"attempt is independent — a Poisson process."
+            "(target: 10 min). An exponential distribution is expected — Poisson process."
         )
     else:
         st.warning("Not enough blocks to compute intervals.")
 
-    # ── RECENT BLOCKS TABLE ──────────────────────────────────────────────────
     st.divider()
     st.subheader("📋 Recent Blocks")
 
@@ -161,7 +141,5 @@ def render() -> None:
             "Timestamp": datetime.datetime.utcfromtimestamp(b.get("timestamp", 0)).strftime("%H:%M:%S UTC"),
         })
 
-    df_blocks = pd.DataFrame(rows)
-    st.dataframe(df_blocks, use_container_width=True, hide_index=True)
-
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
     st.caption(f"Last updated: {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC")

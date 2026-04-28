@@ -2,6 +2,5 @@ requests
 pandas
 plotly
 streamlit
-streamlit-autorefresh
 numpy
 scikit-learn
