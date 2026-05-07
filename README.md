@@ -31,10 +31,11 @@
 - M6: 51% attack cost estimation from live hash rate data and confirmation depth probability chart based on Nakamoto (2008) §11.
 - M7: difficulty predictor using Linear Regression trained on historical adjustment data, evaluated with MAE, RMSE and R².
 - Added API fallback to mempool.space and request caching to handle rate limits from blockstream.info.
+- Final report added to repository.
 
 ## Next Step
 
-- Write the final PDF report and add it to the repository before the deadline.
+- Project complete.
 
 ## Main Problem or Blocker
 
@@ -56,14 +57,16 @@ blockchain-dashboard-vallesdu/
 |-- app.py
 |-- api/
 |   `-- blockchain_client.py
-`-- modules/
-    |-- m1_pow_monitor.py
-    |-- m2_block_header.py
-    |-- m3_difficulty_history.py
-    |-- m4_ai_component.py
-    |-- m5_merkle_verifier.py
-    |-- m6_security_score.py
-    `-- m7_difficulty_predictor.py
+|-- modules/
+|   |-- m1_pow_monitor.py
+|   |-- m2_block_header.py
+|   |-- m3_difficulty_history.py
+|   |-- m4_ai_component.py
+|   |-- m5_merkle_verifier.py
+|   |-- m6_security_score.py
+|   `-- m7_difficulty_predictor.py
+`-- report/
+    `-- report.pdf
 ```
 
 <!-- student-repo-auditor:teacher-feedback:start -->
