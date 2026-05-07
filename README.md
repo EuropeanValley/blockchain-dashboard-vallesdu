@@ -2,9 +2,6 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=23640558&assignment_repo_type=AssignmentRepo)
 # Blockchain Dashboard Project
 
-Use this repository to build your blockchain dashboard project.
-Update this README every week.
-
 ## Student Information
 
 | Field | Value |
@@ -12,42 +9,34 @@ Update this README every week.
 | Student Name | Eduardo Vallejo |
 | GitHub Username | vallesdu |
 | Project Title | Bitcoin Live Metrics & AI Insights |
-| Chosen AI Approach | Anomaly Detector on inter-block arrival times |
+| Chosen AI Approach | Anomaly Detector on inter-block arrival times (M4) + Difficulty Predictor (M7) |
 
 ## Module Tracking
 
-Use one of these values: `Not started`, `In progress`, `Done`
-
 | Module | What it should include | Status |
 |---|---|---|
-| M1 | Proof of Work Monitor | Done|
+| M1 | Proof of Work Monitor | Done |
 | M2 | Block Header Analyzer | Done |
 | M3 | Difficulty History | Done |
-| M4 | AI Component | Done |
+| M4 | AI Component — Anomaly Detector | Done |
+| M5 | Merkle Proof Verifier | Done |
+| M6 | Security Score — 51% attack cost | Done |
+| M7 | Second AI Approach — Difficulty Predictor | Done |
 
 ## Current Progress
 
-Write 3 to 5 short lines about what you have already done.
-
-- Implemented M1: live difficulty, estimated hash rate, hash vs target visualization, and inter-block time histogram.
-
-- Implemented M2: full 80-byte header breakdown, bits→target conversion, and local Proof of Work verification using hashlib.
-
-- Implemented M3: difficulty history chart over last adjustment periods, block time ratio per period, and summary table.
-
-- Implemented M4: anomaly detector on inter-block arrival times using Z-score and exponential CDF p-value, with model evaluation metrics.
-
+- Implemented all 7 modules (M1–M7), including all 3 optional modules.
+- M4: anomaly detector on inter-block arrival times using Z-score and exponential CDF p-value test, evaluated with Precision, Recall and F1.
+- M5: full Merkle proof verification step by step using double SHA-256, showing each hash computation.
+- M6: 51% attack cost estimation from live hash rate data and confirmation depth probability chart based on Nakamoto (2008) §11.
+- M7: difficulty predictor using Linear Regression trained on historical adjustment data, evaluated with MAE, RMSE and R².
 - Added API fallback to mempool.space and request caching to handle rate limits from blockstream.info.
 
 ## Next Step
 
-Write the next small step you will do before the next class.
-
-- Polish the dashboard visuals and test all four modules end to end
+- Write the final PDF report and add it to the repository before the deadline.
 
 ## Main Problem or Blocker
-
-Write here if you are stuck with something.
 
 - Blockstream API rate limits (429 errors) when too many requests are made in a short time. Solved with caching and mempool.space fallback.
 
@@ -61,10 +50,9 @@ python -m streamlit run app.py
 ## Project Structure
 
 ```text
-template-blockchain-dashboard/
+blockchain-dashboard-vallesdu/
 |-- README.md
 |-- requirements.txt
-|-- .gitignore
 |-- app.py
 |-- api/
 |   `-- blockchain_client.py
@@ -72,7 +60,10 @@ template-blockchain-dashboard/
     |-- m1_pow_monitor.py
     |-- m2_block_header.py
     |-- m3_difficulty_history.py
-    `-- m4_ai_component.py
+    |-- m4_ai_component.py
+    |-- m5_merkle_verifier.py
+    |-- m6_security_score.py
+    `-- m7_difficulty_predictor.py
 ```
 
 <!-- student-repo-auditor:teacher-feedback:start -->
