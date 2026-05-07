@@ -7,14 +7,16 @@ from modules.m2_block_header import render as render_m2
 from modules.m3_difficulty_history import render as render_m3
 from modules.m4_ai_component import render as render_m4
 from modules.m5_merkle_verifier import render as render_m5
+from modules.m6_security_score import render as render_m6
 
 st.set_page_config(page_title="Blockchain Dashboard", layout="wide")
 
 st.title("Blockchain Dashboard")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["M1 - PoW Monitor", "M2 - Block Header", "M3 - Difficulty History", "M4 - AI Component", "M5 - Merkle Verifier"]
-)
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "M1 - PoW Monitor", "M2 - Block Header", "M3 - Difficulty History",
+    "M4 - AI Component", "M5 - Merkle Verifier", "M6 - Security Score"
+])
 
 with tab1:
     render_m1()
@@ -30,3 +32,6 @@ with tab4:
 
 with tab5:
     render_m5()
+
+with tab6:
+    render_m6()
